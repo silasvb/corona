@@ -52,3 +52,4 @@ df_p.set_index('name', inplace=True)
 
 df_combined = pd.concat([df_e, df_p], axis=1, sort=False)
 print(df_combined)
+df_combined.to_csv('data/countries_combined.csv')

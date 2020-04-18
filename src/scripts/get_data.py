@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from requests import get
-
+import pandas as pd
 
 def get_countries():
     url = 'https://www.focus-economics.com/countries'
@@ -23,7 +23,7 @@ def get_data_for_country(country):
     rows = soup.find_all('tr')
 
     start = False
-    country_data = {}
+    country_data = {'Name': country}
     for row in rows:
         if not row.text.find('Population') == -1:
             start = True
@@ -37,10 +37,9 @@ def get_data_for_country(country):
 
 
 countries_list = get_countries()
-countries_dict = {}
-for country in countries_list:
-    print(country)
-    data = get_data_for_country(country)
-    countries_dict[country] = data
+countries_data = [get_data_for_country(country) for country in countries_list]
 
-print(countries_dict)
+df = pd.DataFrame(countries_data)
+df.set_index('Name', inplace=True)
+print(df)
+df.to_csv('data/economic_indicators.csv')

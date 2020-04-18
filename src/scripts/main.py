@@ -76,13 +76,13 @@ def preprocess(countries):
             df = df[df['Deaths'] >= 10]
 
             # Create offset time
-            t_offset = df['timestamp'].values[0]
-            df['offset_time'] = df['timestamp'].subtract(t_offset).dt.days
+            t_offset = df['timestamp'].dt.tz_convert(None).values[0]
+            df['offset_time'] = df['timestamp'].dt.tz_convert(None).subtract(t_offset).dt.days
             df.set_index('offset_time', inplace=True)
 
             country_dict[country['individualId']] = df
         
-        return country_dict
+    return country_dict
               
 
 """
@@ -99,3 +99,4 @@ for country_name, country_data in countries_dict.items():
     correlation_data['grad_week_1'].append((country_data['Deaths'].values[week_1_days -1] - country_data['Deaths'].values[0]) / week_1_days)
     
 df = pd.DataFrame.from_dict(correlation_data)
+print(df)

@@ -52,23 +52,24 @@ y = df_p[~df_p['name'].isin(raw_economic['Name'])]
 df_e.set_index('Name', inplace=True)
 df_p.set_index('name', inplace=True)
 
-df_combined = pd.concat([df_e, df_p], axis=1, sort=False)
+df_combined = pd.concat([df_e, df_p], axis=1)
 print(df_combined)
-#df_combined.to_csv('data/countries_combined.csv')
+df_combined.to_csv('data/countries_combined.csv')
 
-#df_combined.to_csv('data/countries_combined.csv')
 df_combined['Population (million)'] = pd.to_numeric(df_combined['Population (million)'],errors='coerce')
 df_combined = df_combined[(df_combined["Population (million)"].notnull())]
 
+df_combined["Imports (USD billion)"] = pd.to_numeric(df_combined["Imports (USD billion)"],errors='coerce')
+df_combined["Imports (annual variation in %)"] = pd.to_numeric(df_combined["Imports (annual variation in %)"],errors='coerce')
+
 df_combined["grad_week_1_per_capita"] = df_combined["grad_week_1"] / df_combined["Population (million)"]
 x = df_combined.corr(method='pearson')
-#pd.DataFrame(x).to_csv("results/tmp.csv")
+pd.DataFrame(x).to_csv("results/tmp.csv")
 
-f = plt.figure(figsize=(19, 15))
-plt.matshow(x, fignum=f.number)
-plt.xticks(range(df_combined.shape[1]), df_combined.columns, fontsize=14, rotation=45)
-plt.yticks(range(df_combined.shape[1]), df_combined.columns, fontsize=14)
-cb = plt.colorbar()
-cb.ax.tick_params(labelsize=14)
-plt.title('Correlation Matrix', fontsize=16)
+f = plt.figure()
+plt.plot(df_combined["Imports (annual variation in %)"], df_combined["grad_week_1_per_capita"], '*')
+plt.xlabel("Imports (annual variation in %)")
+plt.ylabel("Gradient of Uptake of Covid-19 Week 1")
 plt.show()
+
+

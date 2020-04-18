@@ -14,7 +14,7 @@ def get_countries():
     return countries_list
 
 def get_data_for_country(country):
-    url = 'https://www.focus-economics.com/countries/albania'
+    url = 'https://www.focus-economics.com/countries/' + country
 
     raw = get(url).text
 
@@ -33,8 +33,14 @@ def get_data_for_country(country):
                 country_data[columns[0].text] = columns[-1].text
             else:
                 start = False
-    return
+    return country_data
 
 
-countries = get_countries()
-print(countries)
+countries_list = get_countries()
+countries_dict = {}
+for country in countries_list:
+    print(country)
+    data = get_data_for_country(country)
+    countries_dict[country] = data
+
+print(countries_dict)

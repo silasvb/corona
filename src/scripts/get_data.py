@@ -1,24 +1,40 @@
 from bs4 import BeautifulSoup
 from requests import get
 
-url = 'https://www.focus-economics.com/countries/albania'
 
-raw = get(url).text
+def get_countries():
+    url = 'https://www.focus-economics.com/countries'
 
-soup = BeautifulSoup(raw, features='html.parser')
+    raw = get(url).text
+    soup = BeautifulSoup(raw, features='html.parser')
+    countries_table = soup.find_all('div', class_='row coutries-list')
+    countries = countries_table[0].find_all('li')
 
-rows = soup.find_all('tr')
+    countries_list = [country.text for country in countries]
+    return countries_list
 
-start = False
-country_data = {}
-for row in rows:
-    if not row.text.find('Population') == -1:
-        start = True
-    if start:
-        columns = row.find_all('td')
-        if columns:
-            country_data[columns[0].text] = columns[-1].text
-        else:
-            start = False
+def get_data_for_country(country):
+    url = 'https://www.focus-economics.com/countries/albania'
 
-print(country_data)
+    raw = get(url).text
+
+    soup = BeautifulSoup(raw, features='html.parser')
+
+    rows = soup.find_all('tr')
+
+    start = False
+    country_data = {}
+    for row in rows:
+        if not row.text.find('Population') == -1:
+            start = True
+        if start:
+            columns = row.find_all('td')
+            if columns:
+                country_data[columns[0].text] = columns[-1].text
+            else:
+                start = False
+    return
+
+
+countries = get_countries()
+print(countries)

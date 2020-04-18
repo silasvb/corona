@@ -16,5 +16,5 @@ The project structure is as follows:
 ## Getting started
 
 1. Clone this repo
-2. Create python environment from `requirements.txt`
+2. Create python environment from `environment.yml`
 3. Make some majik!

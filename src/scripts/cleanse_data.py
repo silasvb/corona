@@ -39,13 +39,16 @@ def combine_pandemic_substates(df):
         grad = sum([row['grad_week_1'] for row in tmp_dict if row['name'] in sub_states])
         tmp_dict = [row for row in tmp_dict if not row['name'] in sub_states]
         tmp_dict.append({'name': state, 'grad_week_1': grad})
-    print(tmp_dict)
     return pd.DataFrame(tmp_dict)
 
 df_e['Name'] = clean_economic_names(df_e['Name'].values)
 df_p = combine_pandemic_substates(df_p)
 x = df_e[~df_e['Name'].isin(raw_pandemic['name'])]
 y = df_p[~df_p['name'].isin(raw_economic['Name'])]
-print(x['Name'].values)
-print(y['name'].values)
-#print(df_p['name'].values)
+
+# Combine the data frames
+df_e.set_index('Name', inplace=True)
+df_p.set_index('name', inplace=True)
+
+df_combined = pd.concat([df_e, df_p], axis=1, sort=False)
+print(df_combined)

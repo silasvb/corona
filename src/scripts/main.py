@@ -11,27 +11,18 @@
 # - Explore more curve characterisations
 # 
 
-# In[88]:
-
-
 """
 Imports
 """
 import json
 import pandas as pd
 
-
-# In[92]:
-
-
 """
 Reading raw data
 """
 
 def read_raw_data():
-    output_path = '/scratch/results'
-
-    with open('/scratch/projection.json') as file:
+    with open('data/projection.json') as file:
         raw_data = file.read()
 
     parsed_data = json.loads(raw_data)
@@ -39,10 +30,6 @@ def read_raw_data():
     countries = parsed_data['subjects']
     
     return countries
-
-
-# In[93]:
-
 
 """
 Pre-process data into data frames
@@ -98,43 +85,17 @@ def preprocess(countries):
         return country_dict
               
 
-
-# In[97]:
-
-
 """
 Get dataframe of country by curve metrics
 """
 
-import helloworld
-
 countries = read_raw_data()
 countries_dict = preprocess(countries)
 
-hello_world()
-
-
-
 correlation_data = {'name': [], 'grad_week_1': []}
-for country_name, country_data in country_dict.items():
+for country_name, country_data in countries_dict.items():
     correlation_data['name'].append(country_name)
     week_1_days = min([7, len(country_data)])
     correlation_data['grad_week_1'].append((country_data['Deaths'].values[week_1_days -1] - country_data['Deaths'].values[0]) / week_1_days)
     
 df = pd.DataFrame.from_dict(correlation_data)
-print(df)
-
-df.to_csv('/scratch/results/correlations.csv', index=False)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-

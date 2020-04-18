@@ -100,3 +100,4 @@ for country_name, country_data in countries_dict.items():
     
 df = pd.DataFrame.from_dict(correlation_data)
 print(df)
+df.to_csv('data/pandemic.csv')
